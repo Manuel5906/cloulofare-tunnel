@@ -1,9 +1,6 @@
-```markdown
 # 🚀 Cloudflare Tunnel Dashboard PRO
 
-![License](https://img.shields.io/badge/license-ISC-blue.svg)
-![Node](https://img.shields.io/badge/node-18+-green.svg)
-![Docker](https://img.shields.io/badge/docker-ready-blue.svg)
+![License](https://img.shields.io/badge/license-ISC-blue.svg) ![Node](https://img.shields.io/badge/node-18+-green.svg) ![Docker](https://img.shields.io/badge/docker-ready-blue.svg)
 
 Un panel de control web moderno y ligero para gestionar múltiples túneles de Cloudflare de forma simultánea. Optimizado para **Termux** (Android), **Docker** (Servidores/VPS), **Linux** y **Windows**.
 
@@ -21,10 +18,10 @@ Un panel de control web moderno y ligero para gestionar múltiples túneles de C
 
 ## 📱 Instalación Maestra en Termux (Android)
 
-Esta sección cubre desde la instalación básica hasta la optimización para que el servidor nunca se detenga.
+Esta sección optimiza Termux para funcionar como un servidor 24/7, evitando que Android mate el proceso.
 
-### 1. Preparación del Sistema
-Actualiza los repositorios e instala las dependencias necesarias:
+### 1. Preparación y Dependencias
+Actualiza el núcleo del sistema e instala las herramientas esenciales:
 ```bash
 pkg update && pkg upgrade -y
 pkg install nodejs cloudflared git -y
