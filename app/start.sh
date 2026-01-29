@@ -4,27 +4,47 @@
 termux-wake-lock
 
 echo "-------------------------------------------"
-echo "   🚀 INICIANDO CLOUDFLARE DASHBOARD PRO"
+echo "    🚀 CLOUDFLARE DASHBOARD PRO"
 echo "-------------------------------------------"
 
-# 2. Entrar a la carpeta 'app' si el script se ejecuta desde la raíz
+# 2. ACTUALIZACIÓN AUTOMÁTICA
+echo "🔄 Comprobando actualizaciones en GitHub..."
+# Intentar descargar los últimos cambios
+if git pull origin main; then
+    echo "✅ Repositorio actualizado correctamente."
+else
+    echo "⚠️ No se pudo conectar con GitHub (revisa tu internet), iniciando versión local."
+fi
+
+# 3. Moverse a la carpeta de la app
 if [ -d "app" ]; then
-    echo "📂 Entrando a la carpeta /app..."
     cd app
 fi
 
-# 3. Asegurar que la carpeta de persistencia 'sis' exista dentro de /app
+# 4. Asegurar carpeta de persistencia
 if [ ! -d "sis" ]; then
-    echo "📁 Creando carpeta de persistencia 'sis'..."
     mkdir -p sis
 fi
 
-# 4. Verificar e instalar dependencias si faltan
-if [ ! -d "node_modules" ]; then
-    echo "📦 Instalando dependencias de Node..."
+# 5. Verificar dependencias (por si el nuevo código necesita librerías nuevas)
+if [ ! -d "node_modules" ] || [ "package.json" -nt "node_modules" ]; then
+    echo "📦 Actualizando dependencias de Node..."
     npm install --production
 fi
 
-# 5. Iniciar el servidor
-echo "🌐 Servidor arrancando en el puerto 3006..."
-node index.js
+# 6. LIMPIEZA DE PROCESOS (Para evitar errores de puerto 3006)
+echo "🧹 Limpiando procesos antiguos..."
+pkill -f "node index.js" 2>/dev/null
+
+# 7. INICIAR CON PM2 (Opcional) o NODE directo
+echo "🌐 Servidor arrancando en http://localhost:3006"
+echo "-------------------------------------------"
+
+# Si tienes pm2 instalado, úsalo para que no se cierre:
+if command -v pm2 &> /dev/null; then
+    pm2 restart all --name "cf-dash" || pm2 start index.js --name "cf-dash"
+    pm2 logs
+else
+    # Si no tienes pm2, iniciamos normal
+    node index.js
+fi
