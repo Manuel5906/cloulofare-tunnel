@@ -79,9 +79,13 @@ app.post('/api/run', (req, res) => {
 
     const cmd = esWindows ? '.\\cloudflared.exe' : 'cloudflared';
     const proceso = spawn(cmd, ['tunnel', 'run', '--token', token], {
-        detached: !esWindows,
+        detached: !esWindows, 
         stdio: 'ignore'
     });
+
+    if (!esWindows && proceso.unref) {
+        proceso.unref();
+    }
 
     tuneles[id] = { 
         id, 
@@ -111,13 +115,23 @@ app.post('/api/stop', (req, res) => {
     const tunel = tuneles[id];
 
     if (tunel && tunel.proceso) {
+        const pid = tunel.proceso.pid;
         try {
             if (esWindows) {
-                exec(`taskkill /pid ${tunel.proceso.pid} /f /t`);
+                exec(`taskkill /pid ${pid} /f /t`);
             } else {
-                process.kill(-tunel.proceso.pid, 'SIGKILL'); 
+                try {
+                    process.kill(-pid, 'SIGKILL');
+                } catch (e) {
+                    process.kill(pid, 'SIGKILL');
+                }
+            
+                exec(`pkill -f "cloudflared.*${tunel.rawToken.substring(0,10)}"`);
             }
-        } catch (e) {}
+            console.log(`🛑 Túnel detenido: ${id}`);
+        } catch (e) {
+            console.log(`⚠️ Error al detener proceso: ${e.message}`);
+        }
     }
 
     if (tunel) {
