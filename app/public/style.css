@@ -23,6 +23,7 @@ body {
   overflow: hidden;
 }
 
+/* --- NAVEGACIÓN (SIDEBAR EN PC, HEADER EN MÓVIL) --- */
 nav {
   width: 260px;
   background: var(--white);
@@ -73,6 +74,7 @@ nav {
   color: var(--cf-orange);
 }
 
+/* --- CONTENIDO PRINCIPAL --- */
 main {
   flex: 1;
   padding: 40px;
@@ -151,7 +153,7 @@ input {
 /* --- LISTA DE TUNNELES --- */
 .t-card {
   background: var(--white);
-  padding: 20px;
+  padding: 8px;
   border-radius: 20px;
   margin-bottom: 12px;
   display: flex;
@@ -203,6 +205,7 @@ input {
   color: white;
 }
 
+/* --- RESPONSIVE: MENÚ ARRIBA --- */
 @media (max-width: 768px) {
   body {
     flex-direction: column;
@@ -234,7 +237,7 @@ input {
   }
   .nav-link span {
     display: none;
-  }
+  } /* Oculta texto en móvil para que quepan los iconos */
   .nav-link i {
     font-size: 18px;
     margin: 0;
@@ -260,6 +263,7 @@ input {
   }
 }
 
+/* Estilo para las tarjetas en el baúl */
 .offline-style {
     opacity: 0.8;
     border-style: dashed;
