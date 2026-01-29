@@ -23,7 +23,6 @@ body {
   overflow: hidden;
 }
 
-/* --- NAVEGACIÓN (SIDEBAR EN PC, HEADER EN MÓVIL) --- */
 nav {
   width: 260px;
   background: var(--white);
@@ -74,7 +73,6 @@ nav {
   color: var(--cf-orange);
 }
 
-/* --- CONTENIDO PRINCIPAL --- */
 main {
   flex: 1;
   padding: 40px;
@@ -205,7 +203,6 @@ input {
   color: white;
 }
 
-/* --- RESPONSIVE: MENÚ ARRIBA --- */
 @media (max-width: 768px) {
   body {
     flex-direction: column;
@@ -237,7 +234,7 @@ input {
   }
   .nav-link span {
     display: none;
-  } /* Oculta texto en móvil para que quepan los iconos */
+  }
   .nav-link i {
     font-size: 18px;
     margin: 0;
@@ -263,7 +260,6 @@ input {
   }
 }
 
-/* Estilo para las tarjetas en el baúl */
 .offline-style {
     opacity: 0.8;
     border-style: dashed;
@@ -315,4 +311,148 @@ input {
   font-weight: 700;
   font-size: 13px;
   transition: 0.2s;
+}
+
+/* --- LISTA DE TUNNELES (AJUSTADO) --- */
+.t-card {
+  background: var(--white);
+  padding: 16px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  width: 100%;
+}
+
+.t-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #f1f5f9;
+  color: var(--cf-orange);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.t-details {
+  flex: 1;
+  min-width: 0; /* Importante para que el texto no desborde */
+}
+
+.t-details h4 {
+  font-size: 15px;
+  margin-bottom: 2px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.t-details p {
+  font-size: 12px;
+  color: var(--text-sub);
+}
+
+/* --- ACCIONES (BOTONES) --- */
+.t-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.btn-stop, .btn-start, .btn-remove {
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 12px;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Botón Detener (Rojo) */
+.btn-stop {
+  background: #fff1f2;
+  color: #f43f5e;
+}
+.btn-stop:hover {
+  background: #f43f5e;
+  color: white;
+}
+
+/* Botón Iniciar (Verde) */
+.btn-start {
+  background: #ecfdf5;
+  color: #10b981;
+}
+.btn-start:hover {
+  background: #10b981;
+  color: white;
+}
+
+/* Botón Eliminar (Gris Neutro) */
+.btn-remove {
+  background: #f1f5f9;
+  color: #64748b;
+}
+.btn-remove:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+/* --- AJUSTE PARA MÓVILES (BREAKPOINT) --- */
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+  }
+
+  nav {
+    width: 100%;
+    height: 70px;
+    flex-direction: row;
+    padding: 0 15px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+  }
+
+  main {
+    padding: 15px;
+  }
+
+  /* La t-card cambia a columna en móviles pequeños */
+  .t-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 15px;
+  }
+
+  .t-header-mobi { /* Contenedor opcional para icono e info */
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .t-actions {
+    width: 100%;
+    margin-top: 10px;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 10px;
+  }
+
+  .t-actions button {
+    flex: 1; /* Los botones ocupan el mismo ancho en móvil */
+    padding: 12px 5px;
+  }
 }
