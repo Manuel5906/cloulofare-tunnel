@@ -1,0 +1,27 @@
+---- TERMUX SISTEMAS INSTALACION ---
+
+-> pkg update && pkg upgrade
+
+-> pkg install nodejs cloudflared
+
+---- TERMUX SISTEMAS PERMISOS DE STORAGE ---
+
+-> termux-setup-storage
+
+---- TERMUX SISTEMAS DAR PERMISOS ---
+
+-> chmod +x start.sh
+
+---- TERMUX INICIAR SISTEMAS ---
+
+-> ./start.sh
+
+
+Tips adicionales para Termux:
+
+Ver la Web: Recuerda que puedes ver tu dashboard en el navegador de tu celular entrando a: http://localhost:3006.
+
+Acceso Externo: Si quieres entrar al dashboard desde otra PC que esté en la misma red Wi-Fi, usa la IP de tu móvil (puedes verla con el comando ifconfig). 
+Por ejemplo: http://192.168.1.15:3006.
+
+Cerrar todo: Para apagar el servidor y liberar la batería, presiona Ctrl + C y luego ejecuta termux-wake-unlock.

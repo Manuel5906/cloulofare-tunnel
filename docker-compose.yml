@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  cf-dashboard:
+    build: .
+    container_name: cf-pro-dashboard
+    ports:
+      - "3006:3006"
+    volumes:
+      - ./sis:/app/sis
+    restart: unless-stopped

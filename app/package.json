@@ -1,0 +1,28 @@
+{
+  "name": "cloulofare-tunnel",
+  "version": "1.0.0",
+  "description": "Dashboard profesional para la gestión de túneles Cloudflare con persistencia de datos.",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js",
+    "termux": "sh start.sh"
+  },
+  "keywords": [
+    "cloudflare",
+    "cloudflared",
+    "tunnel",
+    "dashboard",
+    "docker",
+    "termux",
+    "management",
+    "socket.io",
+    "proxy"
+  ],
+  "author": "DarkCore",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1",
+    "socket.io": "^4.8.3"
+  }
+}

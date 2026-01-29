@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloudflare Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-brand"><i class="fa-solid fa-bolt-lightning"></i> CF PRO</div>
+        <div class="nav-menu">
+            <div class="nav-link active" onclick="show('home', this)"><i class="fa-solid fa-house"></i><span>Home</span></div>
+            <div class="nav-link" onclick="show('list', this)"><i class="fa-solid fa-server"></i><span>Tunnels</span></div>
+        </div>
+    </nav>
+
+    <main>
+        <section id="home" class="tab-content active">
+            <div class="glass-card">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/9/94/Cloudflare_Logo.png" style="width:140px; margin-bottom:20px;">
+                <h2 style="margin-bottom:10px;">Connect Tunnel</h2>
+                <p style="color:var(--text-sub); margin-bottom:30px;">Bridge your local services to the cloud.</p>
+                <div class="input-container">
+                    <i class="fa-solid fa-terminal" style="color:#94a3b8;"></i>
+                    <input type="text" id="tokenIn" placeholder="Paste cloudflared token or command...">
+                </div>
+                <button class="btn-launch" onclick="launch()">Launch Instance</button>
+            </div>
+        </section>
+
+        <section id="list" class="tab-content">
+            <h2 style="margin-bottom:20px; display: flex; align-items: center; gap: 10px;">
+                <i class="fa-solid fa-circle-dot" style="color:var(--success); font-size:12px;"></i> 
+                Live Nodes
+            </h2>
+            <div id="grid"></div> 
+
+            <div style="margin: 40px 0; border-top: 2px dashed var(--border); position: relative;">
+                <span style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--bg); padding: 0 15px; color: var(--text-sub); font-size: 12px; font-weight: bold; text-transform: uppercase;">
+                    Storage Box (JSON)
+                </span>
+            </div>
+
+            <h2 style="margin-bottom:20px; color: var(--text-sub); font-size: 18px;">
+                <i class="fa-solid fa-box-archive"></i> Saved Tokens
+            </h2>
+            <div id="baul-grid"></div> 
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
