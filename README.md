@@ -4,22 +4,23 @@
 ![Node](https://img.shields.io/badge/node-18+-green.svg)
 ![Docker](https://img.shields.io/badge/docker-ready-blue.svg)
 
-Un panel de control web moderno y ligero para gestionar múltiples túneles de Cloudflare de forma simultánea. Diseñado para ofrecer persistencia y facilidad de uso en **Docker**, **Termux** (Android), **Linux** y **Windows**.
+Un panel de control web moderno y ligero para gestionar múltiples túneles de Cloudflare de forma simultánea. Optimizado para **Termux** (Android), **Docker** (Servidores/VPS), **Linux** y **Windows**.
 
 ---
 
 ## 📂 Estructura del Proyecto
 
-* `app/`: Núcleo del sistema (Backend & Frontend).
-* `app/sis/`: Carpeta de persistencia (Base de datos JSON).
-* `docker-compose.yml`: Orquestación de contenedores.
-* `start.sh`: Script de inicio optimizado para móviles.
+* `app/`: Directorio principal del código fuente (Backend & Frontend).
+* `app/sis/`: Carpeta de persistencia para la base de datos JSON (`tunnels_db.json`).
+* `docker-compose.yml`: Configuración para despliegue rápido con contenedores.
+* `start.sh`: Script de automatización para ejecución en móviles.
+* `.dockerignore`: Optimización para subidas rápidas y construcción de imágenes.
 
 ---
 
-## 🛠️ Instalación en Termux (Android)
+## 📱 Instalación en Termux (Android)
 
-Ideal para mantener tus túneles activos desde un dispositivo móvil 24/7.
+Ideal para transformar tu móvil en un servidor de túneles 24/7.
 
 ### 1. Preparación del Sistema
 ```bash
