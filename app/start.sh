@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# 1. Evitar que Android suspenda la CPU
+# 1. Evitar que Android suspenda la CPU (Importante para que no se apague el stream)
 termux-wake-lock
 
 echo "-------------------------------------------"
@@ -9,16 +9,18 @@ echo "-------------------------------------------"
 
 # 2. ACTUALIZACIÓN AUTOMÁTICA
 echo "🔄 Comprobando actualizaciones en GitHub..."
-# Intentar descargar los últimos cambios
 if git pull origin main; then
     echo "✅ Repositorio actualizado correctamente."
 else
-    echo "⚠️ No se pudo conectar con GitHub (revisa tu internet), iniciando versión local."
+    echo "⚠️ No se pudo conectar con GitHub, iniciando versión local."
 fi
 
 # 3. Moverse a la carpeta de la app
 if [ -d "app" ]; then
     cd app
+else
+    echo "❌ Error: No se encontró la carpeta 'app'"
+    exit 1
 fi
 
 # 4. Asegurar carpeta de persistencia
@@ -26,25 +28,21 @@ if [ ! -d "sis" ]; then
     mkdir -p sis
 fi
 
-# 5. Verificar dependencias (por si el nuevo código necesita librerías nuevas)
+# 5. Verificar dependencias
 if [ ! -d "node_modules" ] || [ "package.json" -nt "node_modules" ]; then
-    echo "📦 Actualizando dependencias de Node..."
+    echo "📦 Instalando/Actualizando dependencias de Node..."
     npm install --production
 fi
 
-# 6. LIMPIEZA DE PROCESOS (Para evitar errores de puerto 3006)
-echo "🧹 Limpiando procesos antiguos..."
+# 6. LIMPIEZA DE PROCESOS (Para liberar el puerto 3006 antes de iniciar)
+echo "🧹 Limpiando procesos antiguos en el puerto 3006..."
+# Buscamos el proceso que usa el puerto 3006 y lo cerramos
+fuser -k 3006/tcp 2>/dev/null
 pkill -f "node index.js" 2>/dev/null
 
-# 7. INICIAR CON PM2 (Opcional) o NODE directo
+# 7. INICIAR CON NODE DIRECTO
 echo "🌐 Servidor arrancando en http://localhost:3006"
 echo "-------------------------------------------"
 
-# Si tienes pm2 instalado, úsalo para que no se cierre:
-if command -v pm2 &> /dev/null; then
-    pm2 restart all --name "cf-dash" || pm2 start index.js --name "cf-dash"
-    pm2 logs
-else
-    # Si no tienes pm2, iniciamos normal
-    node index.js
-fi
+# Iniciamos el servidor de forma normal
+node index.js
