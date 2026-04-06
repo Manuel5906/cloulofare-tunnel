@@ -22,7 +22,9 @@
   "author": "DarkCore",
   "license": "ISC",
   "dependencies": {
-    "express": "^5.2.1",
-    "socket.io": "^4.8.3"
+    "express": "^4.19.2",
+    "socket.io": "^4.8.3",
+    "helmet": "^7.1.0",
+    "http-auth": "^4.1.9"
   }
 }
