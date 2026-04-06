@@ -73,6 +73,16 @@ mkdir -p app/sis
 docker-compose up -d --build
 
 ```
+## 🐳 Instalación con Termux (Servidores)
+
+Despliegue aislado y persistente en segundos:
+
+```bash
+git clone [https://github.com/Manuel5906/cloulofare-tunnel.git](https://github.com/Manuel5906/cloulofare-tunnel.git)
+cd cloulofare-tunnel/app
+
+
+```
 
 ---
 
