@@ -80,7 +80,8 @@ Despliegue aislado y persistente en segundos:
 ```bash
 git clone [https://github.com/Manuel5906/cloulofare-tunnel.git](https://github.com/Manuel5906/cloulofare-tunnel.git)
 cd cloulofare-tunnel/app
-
+chmod +x start.sh
+./start.sh
 
 ```
 
