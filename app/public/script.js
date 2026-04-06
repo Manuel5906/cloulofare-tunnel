@@ -2,22 +2,20 @@ const socket = io();
 const gridActivos = document.getElementById('grid');
 const gridBaul = document.getElementById('baul-grid'); 
 
-// 1. FUNCIÓN DE RENDERIZADO REUTILIZABLE
 function renderizarTodo(tunnels) {
+    if (!gridActivos) return;
     gridActivos.innerHTML = '';
-    if(gridBaul) gridBaul.innerHTML = '';
+    if (gridBaul) gridBaul.innerHTML = '';
 
     const activos = tunnels.filter(t => t.status === 'online');
     const guardados = tunnels.filter(t => t.status === 'offline');
 
-    // Nodos Online
     if (activos.length === 0) {
         gridActivos.innerHTML = `<div class="empty-msg">No hay nodos activos</div>`;
     } else {
         activos.forEach(t => gridActivos.appendChild(crearCard(t, true)));
     }
 
-    // Nodos en el Baúl
     if (gridBaul) {
         if (guardados.length === 0) {
             gridBaul.innerHTML = `<p style="text-align:center; color:#94a3b8; font-size:13px; padding:20px;">Baúl vacío</p>`;
@@ -27,49 +25,11 @@ function renderizarTodo(tunnels) {
     }
 }
 
-// 2. SINCRONIZACIÓN INICIAL (Al cargar la web)
-async function syncInitialData() {
-    try {
-        const response = await fetch('/api/tunnels'); // Pide la lista al servidor
-        const data = await response.json();
-        renderizarTodo(data);
-    } catch (error) {
-        console.error("Error cargando datos iniciales:", error);
-    }
-}
-
-// Ejecutar cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', syncInitialData);
-
-// --- ACTUALIZACIÓN POR SOCKET (En tiempo real) ---
-socket.on('lista-actualizada', (tunnels) => {
-    renderizarTodo(tunnels);
-});
-
-function show(id, el) {
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    el.classList.add('active');
-}
-
-async function launch() {
-    const input = document.getElementById('tokenIn');
-    if(!input.value) return;
-    
-    await fetch('/api/run', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ rawInput: input.value })
-    });
-    
-    input.value = '';
-    show('list', document.querySelector('.nav-link:nth-child(2)'));
-}
-
 function crearCard(t, isOnline) {
     const card = document.createElement('div');
+    const safeId = t.id.replace(/\s+/g, '-');
     card.className = `t-card ${!isOnline ? 'offline-style' : ''}`;
+    card.id = `card-${safeId}`;
     
     card.innerHTML = `
         <div class="t-icon" style="background: ${isOnline ? '#ecfdf5' : '#f1f5f9'}; color: ${isOnline ? '#10b981' : '#94a3b8'}">
@@ -78,6 +38,7 @@ function crearCard(t, isOnline) {
         <div class="t-details">
             <h4>${t.id} ${isOnline ? '<span class="badge-online">●</span>' : ''}</h4>
             <p><i class="fa-solid fa-key"></i> ${t.token}</p>
+            ${isOnline ? `<div class="mini-logs" id="logs-${safeId}">Esperando logs...</div>` : ''}
         </div>
         <div class="actions">
             ${isOnline ? 
@@ -90,17 +51,82 @@ function crearCard(t, isOnline) {
     return card;
 }
 
-// --- ACCIONES API ---
+socket.on('lista-actualizada', (tunnels) => {
+    renderizarTodo(tunnels);
+});
+
+socket.on('log-update', (data) => {
+    const logDiv = document.getElementById(`logs-${data.id.replace(/\s+/g, '-')}`);
+    if (logDiv) {
+        logDiv.innerText = data.msg;
+        logDiv.scrollTop = logDiv.scrollHeight;
+    }
+});
+
+socket.on('sys-stats', (stats) => {
+    const cpuEl = document.getElementById('stat-cpu');
+    const memEl = document.getElementById('stat-mem');
+    if (cpuEl) cpuEl.innerText = stats.cpu + '%';
+    if (memEl) memEl.innerText = stats.mem;
+});
+
+async function launch() {
+    const input = document.getElementById('tokenIn');
+    if(!input.value) return;
+    
+    const res = await fetch('/api/run', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ rawInput: input.value })
+    });
+    
+    const data = await res.json();
+    if (data.status === "success") {
+        input.value = '';
+        show('list', document.querySelector('.nav-link[onclick*="list"]'));
+    }
+}
+
 async function stopT(id) {
-    await fetch('/api/stop', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({id}) });
+    await fetch('/api/stop', { 
+        method: 'POST', 
+        headers: {'Content-Type':'application/json'}, 
+        body: JSON.stringify({id}) 
+    });
 }
 
 async function startT(id) {
-    await fetch('/api/run', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({idExistente: id}) });
+    await fetch('/api/run', { 
+        method: 'POST', 
+        headers: {'Content-Type':'application/json'}, 
+        body: JSON.stringify({idExistente: id}) 
+    });
 }
 
 async function removeT(id) {
-    if(confirm('¿Eliminar definitivamente de la base de datos?')) {
-        await fetch('/api/remove', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({id}) });
+    if(confirm('¿Eliminar definitivamente?')) {
+        await fetch('/api/remove', { 
+            method: 'POST', 
+            headers: {'Content-Type':'application/json'}, 
+            body: JSON.stringify({id}) 
+        });
     }
 }
+
+function show(id, el) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    const target = document.getElementById(id);
+    if (target) target.classList.add('active');
+    if (el) el.classList.add('active');
+}
+
+async function syncInitialData() {
+    try {
+        const response = await fetch('/api/tunnels');
+        const data = await response.json();
+        renderizarTodo(data);
+    } catch (e) {}
+}
+
+document.addEventListener('DOMContentLoaded', syncInitialData);
