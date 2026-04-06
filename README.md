@@ -33,10 +33,10 @@ pkg install nodejs cloudflared git -y
 Es fundamental dar permisos de almacenamiento para manejar los archivos de base de datos:
 
 ```bash
-termux-setup-storage
-git clone [https://github.com/Manuel5906/cloulofare-tunnel.git](https://github.com/Manuel5906/cloulofare-tunnel.git)
-cd cloulofare-tunnel
+git clone 
+cd cloulofare-tunnel/app
 chmod +x start.sh
+./start.sh
 
 ```
 
@@ -71,17 +71,6 @@ git clone [https://github.com/Manuel5906/cloulofare-tunnel.git](https://github.c
 cd cloulofare-tunnel
 mkdir -p app/sis
 docker-compose up -d --build
-
-```
-## 🐳 Instalación con Termux (Servidores)
-
-Despliegue aislado y persistente en segundos:
-
-```bash
-git clone [https://github.com/Manuel5906/cloulofare-tunnel.git](https://github.com/Manuel5906/cloulofare-tunnel.git)
-cd cloulofare-tunnel/app
-chmod +x start.sh
-./start.sh
 
 ```
 
