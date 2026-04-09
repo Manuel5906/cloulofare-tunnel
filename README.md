@@ -33,7 +33,7 @@ pkg install nodejs cloudflared git -y
 Es fundamental dar permisos de almacenamiento para manejar los archivos de base de datos:
 
 ```bash
-git clone 
+git clone https://github.com/Manuel5906/cloulofare-tunnel.git
 cd cloulofare-tunnel/app
 chmod +x start.sh
 ./start.sh
