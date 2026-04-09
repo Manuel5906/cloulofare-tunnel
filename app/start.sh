@@ -27,5 +27,4 @@ pkill -f "node index.js" 2>/dev/null
 echo "🌐 Servidor arrancando en http://localhost:3006"
 echo "-------------------------------------------"
 
-# Iniciamos el servidor
 node index.js
