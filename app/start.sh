@@ -1,52 +1,52 @@
 #!/bin/bash
 
+# 1. Evitar que Android suspenda la CPU
+termux-wake-lock
+
 echo "-------------------------------------------"
-echo "    🚀 CLOUDFLARE DASHBOARD PRO"
+echo "    🚀 CLOUDFLARE DASHBOARD PRO (PM2)"
 echo "-------------------------------------------"
 
-# 1. AUTO-INSTALACIÓN DE DEPENDENCIAS DEL SISTEMA
+# 2. AUTO-INSTALACIÓN DE HERRAMIENTAS DEL SISTEMA
 echo "🔍 Verificando herramientas del sistema..."
-
-DEPENDENCIAS=("nodejs-lts" "git" "psmisc")
-
-for dep in "${DEPENDENCIAS[@]}"; do
-    if ! pkg list-installed | grep -q "$dep"; then
-        echo "🎁 Instalando $dep..."
-        pkg install "$dep" -y
+for pkg in nodejs-lts psmisc git; do
+    if ! command -v $pkg &> /dev/null; then
+        echo "🎁 Instalando $pkg..."
+        pkg install $pkg -y
     fi
 done
 
-# 2. Evitar que Android suspenda la CPU
-termux-wake-lock
-
-# 3. Asegurar carpeta de persistencia
-if [ ! -d "sis" ]; then
-    mkdir -p sis
+# 3. INSTALACIÓN GLOBAL DE PM2 (Si no existe)
+if ! command -v pm2 &> /dev/null; then
+    echo "🚀 Instalando PM2 globalmente..."
+    npm install -g pm2
 fi
 
-# 4. Verificar dependencias de Node (package.json)
+# 4. Asegurar carpetas y dependencias del proyecto
+if [ ! -d "sis" ]; then mkdir -p sis; fi
+
 if [ -f "package.json" ]; then
     if [ ! -d "node_modules" ] || [ "package.json" -nt "node_modules" ]; then
-        echo "📦 Instalando/Actualizando dependencias de Node..."
+        echo "📦 Instalando dependencias locales..."
         npm install --production
     fi
-else
-    echo "⚠️ Advertencia: No se encontró package.json"
 fi
 
-# 5. LIMPIEZA DE PROCESOS
-echo "🧹 Limpiando procesos antiguos en el puerto 3006..."
+# 5. GESTIÓN DE PROCESOS CON PM2
+echo "🧹 Limpiando procesos en puerto 3006..."
 fuser -k 3006/tcp 2>/dev/null
-pkill -f "node index.js" 2>/dev/null
 
-# 6. INICIAR SERVIDOR
-echo "🌐 Servidor arrancando en http://localhost:3006"
-echo "-------------------------------------------"
-
-# Verificamos si existe index.js antes de lanzarlo
-if [ -f "index.js" ]; then
-    node index.js
+# Verificamos si ya existe el proceso en PM2 para reiniciarlo o crearlo
+if pm2 list | grep -q "cloud-dash"; then
+    echo "🔄 Reiniciando servidor..."
+    pm2 restart cloud-dash
 else
-    echo "❌ Error: index.js no existe en esta carpeta."
-    ls
+    echo "🆕 Iniciando nuevo proceso..."
+    pm2 start index.js --name "cloud-dash"
 fi
+
+echo "-------------------------------------------"
+echo "✅ Servidor gestionado por PM2"
+echo "👉 Usa 'pm2 logs' para ver la consola"
+echo "👉 Usa 'pm2 status' para ver el estado"
+echo "-------------------------------------------"
